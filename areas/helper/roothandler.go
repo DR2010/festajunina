@@ -5,8 +5,9 @@
 package helper
 
 import (
-	"festajuninaweb/areas/commonstruct"
-	"fjapidishes/helper"
+	"festajuninav2/areas/commonstruct"
+	"festajuninav2/models"
+	"fmt"
 	"html/template"
 	"net/http"
 
@@ -44,7 +45,7 @@ var mongodbvar commonstruct.DatabaseX
 
 // HomePage = assemble results of API call to dish list
 //
-func HomePage(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials commonstruct.Credentials) {
+func HomePage(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials) {
 
 	// create new template
 	t, _ := template.ParseFiles("html/homepage.html", "templates/main/pagebodytemplate.html")
@@ -56,13 +57,14 @@ func HomePage(httpwriter http.ResponseWriter, redisclient *redis.Client, credent
 	items.Info.UserID = credentials.UserID
 	items.Info.Application = credentials.ApplicationID
 	items.Info.IsAdmin = credentials.IsAdmin
-	items.Info.Organisation = helper.Getvaluefromcache("Organisation")
-	items.Info.Database = helper.Getvaluefromcache("APIMongoDBDatabase")
+	items.Info.Organisation = Getvaluefromcache("Organisation")
 
-	org, _ := redisclient.Get("Organisation").Result()
+	fmt.Println("Organisation: " + items.Info.Organisation)
+
+	org := Getvaluefromcache("Organisation")
 	items.Info.Organisation = org
 
-	db, _ := redisclient.Get("Web.MongoDB.Database").Result()
+	db := Getvaluefromcache("APIMongoDBDatabase")
 	items.Info.Database = db
 
 	t.Execute(httpwriter, items)

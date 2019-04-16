@@ -89,13 +89,26 @@ var routes = Routes{
 	Route{"showcache", "GET", "/showcache", showcache},
 	Route{"errorpage", "POST", "/errorpage", errorpage},
 	// ----------------------------------------------------------- Order
+
+	Route{"activitylist", "GET", "/activitylist", activitylist},
+
+	Route{"activityadddisplay", "POST", "/activityadddisplay", activityadddisplay},
+	Route{"activityupdatedisplay", "POST", "/activityupdatedisplay", activityupdatedisplay},
+
+	Route{"activityadd", "POST", "/activityadd", activityadd},
+	Route{"activityupdate", "POST", "/activityupdate", activityupdate},
+	Route{"activitydelete", "POST", "/activitydelete", activitydeletemultiple},
+	// -----------------------------------------------------------
+
 	Route{"saveordertosqlX", "GET", "/saveordertosqlX", saveordertosql},
 	Route{"orderlist", "GET", "/orderlist", orderlist},
 	Route{"orderlist", "POST", "/orderlist", orderlist},
 	Route{"orderlistcompleted", "GET", "/orderlistcompleted", orderlistcompleted},
 	Route{"orderlistcompleted", "POST", "/orderlistcompleted", orderlistcompleted},
-	Route{"orderliststatus", "GET", "/orderliststatus", orderliststatus},
-	Route{"orderliststatus", "POST", "/orderliststatus", orderliststatus},
+	Route{"orderliststatus", "GET", "/orderliststatus", orderliststatusactivity},
+	Route{"orderliststatus", "POST", "/orderliststatus", orderliststatusactivity},
+	// Route{"orderliststatus", "GET", "/orderliststatus", orderliststatus},
+	// Route{"orderliststatus", "POST", "/orderliststatus", orderliststatus},
 	Route{"orderadddisplay", "POST", "/orderadddisplay", orderadddisplay},
 	Route{"orderadddisplay", "GET", "/orderadddisplay", orderadddisplay},
 	Route{"orderadd", "POST", "/orderadd", orderadd},
@@ -104,8 +117,10 @@ var routes = Routes{
 	Route{"ordersettoready", "GET", "/ordersettoready", ordersettoready},
 	Route{"ordersettocompleted", "GET", "/ordersettocompleted", ordersettocompleted},
 	Route{"ordersettopaylater", "GET", "/ordersettopaylater", ordersettopaylater},
+	Route{"ordersettoplaced", "GET", "/ordersettoplaced", ordersettoplaced},
 	Route{"ordercancelX", "GET", "/ordercancelX", ordercancel},
 	Route{"ordercancelX", "POST", "/ordercancelX", ordercancel},
 	Route{"orderviewdisplay", "GET", "/orderviewdisplay", orderviewdisplay},
 	// -----------------------------------------------------------
+
 }

@@ -6,8 +6,7 @@ package ordershandler
 
 import (
 	"encoding/json"
-	"festajuninaweb/areas/commonstruct"
-	"festajuninaweb/areas/security"
+	"festajuninav2/areas/commonstruct"
 	"fmt"
 	"html/template"
 	"io/ioutil"
@@ -15,8 +14,10 @@ import (
 	"strconv"
 	"time"
 
-	dish "festajuninaweb/areas/disheshandler"
-	order "restauranteapi/models"
+	activity "festajuninaV2/areas/activitieshandler"
+	dish "festajuninav2/areas/disheshandler"
+	securityhandler "festajuninav2/areas/securityhandler"
+	models "festajuninav2/models"
 
 	"github.com/go-redis/redis"
 )
@@ -34,6 +35,8 @@ type ControllerInfo struct {
 	IsAdmin       string //
 	IsAnonymous   string //
 	Total         string
+	EventID       string //
+
 }
 
 // Row is
@@ -46,8 +49,8 @@ type DisplayTemplate struct {
 	Info       ControllerInfo
 	FieldNames []string
 	Rows       []Row
-	Orders     []order.Order
-	OrderItem  order.Order
+	Orders     []models.Order
+	OrderItem  models.Order
 	Pratos     []Dish
 }
 
@@ -82,7 +85,7 @@ func List(httpwriter http.ResponseWriter, redisclient *redis.Client, sysid strin
 
 	// Set rows to be displayed
 	items.Rows = make([]Row, len(list))
-	items.Orders = make([]order.Order, len(list))
+	items.Orders = make([]models.Order, len(list))
 	// items.RowID = make([]int, len(dishlist))
 
 	for i := 0; i < len(list); i++ {
@@ -101,7 +104,7 @@ func List(httpwriter http.ResponseWriter, redisclient *redis.Client, sysid strin
 }
 
 // ListV2 = assemble results of API call to dish list
-func ListV2(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials commonstruct.Credentials, sysid string) {
+func ListV2(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, sysid string) {
 
 	// create new template
 	t, _ := template.ParseFiles("templates/order/indexlistrefresh.html", "templates/order/orderlisttemplate.html")
@@ -119,19 +122,29 @@ func ListV2(httpwriter http.ResponseWriter, redisclient *redis.Client, credentia
 	items.Info.ApplicationID = credentials.ApplicationID
 	items.Info.IsAdmin = credentials.IsAdmin
 
-	var numberoffields = 5
+	activeactivity := activity.FindActiveAPI()
+	items.Info.EventID = activeactivity.Name
+
+	var numberoffields = 6
 
 	// Set colum names
+	// Not used, template has the column names
+	// --------------------------------------------------
 	items.FieldNames = make([]string, numberoffields)
 	items.FieldNames[0] = "Order ID"
 	items.FieldNames[1] = "Name"
 	items.FieldNames[2] = "Date"
 	items.FieldNames[3] = "Status"
-	items.FieldNames[4] = "Mode"
+	items.FieldNames[4] = "Total"   // it was Mode !?
+	items.FieldNames[5] = "EventID" // it was Mode !?
 
 	// Remove unwanted statuses
 	var count = 0
 	for i := 0; i < len(list); i++ {
+
+		if list[i].EventID != items.Info.EventID {
+			continue
+		}
 
 		if list[i].Status == "Cancelled" || list[i].Status == "PayLater" {
 			continue
@@ -142,13 +155,19 @@ func ListV2(httpwriter http.ResponseWriter, redisclient *redis.Client, credentia
 
 	// Set rows to be displayed
 	// items.Rows = make([]Row, len(list))
-	// items.Orders = make([]order.Order, len(list))
+	// items.Orders = make([]models.Order, len(list))
 
 	items.Rows = make([]Row, count)
-	items.Orders = make([]order.Order, count)
+	items.Orders = make([]models.Order, count)
 
 	var cnt = 0
+	var tot = 0.00
+	// for i := 0; i < len(list); i++ {
 	for i := 0; i < len(list); i++ {
+
+		if list[i].EventID != items.Info.EventID {
+			continue
+		}
 
 		if list[i].Status == "Cancelled" || list[i].Status == "PayLater" {
 			continue
@@ -161,16 +180,22 @@ func ListV2(httpwriter http.ResponseWriter, redisclient *redis.Client, credentia
 		items.Rows[cnt].Description[2] = list[i].Date
 		items.Rows[cnt].Description[3] = list[i].Status
 		items.Rows[cnt].Description[4] = list[i].EatMode
+		items.Rows[cnt].Description[5] = list[i].EventID
 
 		items.Orders[cnt] = list[i]
 		cnt++
+
+		price, _ := strconv.ParseFloat(list[i].TotalGeral, 64)
+		tot = tot + price
 	}
+
+	items.Info.Total = strconv.FormatFloat(tot, 'f', 2, 64)
 
 	t.Execute(httpwriter, items)
 }
 
 // SaveOrderToMySQL is to save mongodb to MySQL
-func SaveOrderToMySQL(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials commonstruct.Credentials, httprequest *http.Request, sysid string) {
+func SaveOrderToMySQL(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, httprequest *http.Request, sysid string) {
 
 	APISaveOrderToMySQL(sysid, redisclient)
 
@@ -178,7 +203,7 @@ func SaveOrderToMySQL(httpwriter http.ResponseWriter, redisclient *redis.Client,
 }
 
 // ListV3OnlyPlaced = assemble results of API call to dish list
-func ListV3OnlyPlaced(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials commonstruct.Credentials, sysid string) {
+func ListV3OnlyPlaced(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, sysid string) {
 
 	// create new template
 	t, _ := template.ParseFiles("templates/order/indexlistrefresh.html", "templates/order/orderlisttemplate.html")
@@ -208,7 +233,7 @@ func ListV3OnlyPlaced(httpwriter http.ResponseWriter, redisclient *redis.Client,
 
 	// Set rows to be displayed
 	items.Rows = make([]Row, len(list))
-	items.Orders = make([]order.Order, len(list))
+	items.Orders = make([]models.Order, len(list))
 	// items.RowID = make([]int, len(dishlist))
 
 	r := 0
@@ -232,7 +257,7 @@ func ListV3OnlyPlaced(httpwriter http.ResponseWriter, redisclient *redis.Client,
 }
 
 // ListCompleted = assemble results of API call to dish list
-func ListCompleted(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials commonstruct.Credentials, sysid string) {
+func ListCompleted(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, sysid string) {
 
 	// if credentials.IsAdmin != "Yes" {
 	// 	return
@@ -254,12 +279,16 @@ func ListCompleted(httpwriter http.ResponseWriter, redisclient *redis.Client, cr
 	items.Info.ApplicationID = credentials.ApplicationID
 	items.Info.IsAdmin = credentials.IsAdmin
 
+	activeactivity := activity.FindActiveAPI()
+	items.Info.EventID = activeactivity.Name
+
 	// Set rows to be displayed
 	items.Rows = make([]Row, len(list))
-	items.Orders = make([]order.Order, len(list))
+	items.Orders = make([]models.Order, len(list))
 
 	var tot = 0.00
 	for i := 0; i < len(list); i++ {
+
 		items.Orders[i] = list[i]
 		price, _ := strconv.ParseFloat(list[i].TotalGeral, 64)
 		tot = tot + price
@@ -271,7 +300,7 @@ func ListCompleted(httpwriter http.ResponseWriter, redisclient *redis.Client, cr
 }
 
 // ListStatus = assemble results of API call to dish list
-func ListStatus(httprequest *http.Request, httpwriter http.ResponseWriter, redisclient *redis.Client, credentials commonstruct.Credentials, sysid string) {
+func ListStatus(httprequest *http.Request, httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, sysid string) {
 
 	status := httprequest.URL.Query().Get("status")
 
@@ -303,7 +332,7 @@ func ListStatus(httprequest *http.Request, httpwriter http.ResponseWriter, redis
 
 	// Set rows to be displayed
 	items.Rows = make([]Row, len(list))
-	items.Orders = make([]order.Order, len(list))
+	items.Orders = make([]models.Order, len(list))
 	// items.RowID = make([]int, len(dishlist))
 
 	for i := 0; i < len(list); i++ {
@@ -321,8 +350,68 @@ func ListStatus(httprequest *http.Request, httpwriter http.ResponseWriter, redis
 	t.Execute(httpwriter, items)
 }
 
+// ListStatusActivity = assemble results of API call to dish list
+func ListStatusActivity(httprequest *http.Request, httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, sysid string) {
+
+	status := httprequest.URL.Query().Get("status")
+	// activity := httprequest.URL.Query().Get("activity")
+
+	activeactivity := activity.FindActiveAPI()
+	activity := activeactivity.Name
+
+	// create new template
+	t, _ := template.ParseFiles("templates/order/indexlistrefresh.html", "templates/order/orderlisttemplate.html")
+
+	// Get list of orders (api call)
+	//
+	var list = APICallListStatusActivity(sysid, redisclient, credentials, status, activity)
+
+	// Assemble the display structure for html template
+	//
+	items := DisplayTemplate{}
+	items.Info.Name = "Order List"
+	items.Info.UserID = credentials.UserID
+	items.Info.UserName = credentials.Name
+	items.Info.ApplicationID = credentials.ApplicationID
+	items.Info.IsAdmin = credentials.IsAdmin
+
+	var numberoffields = 5
+
+	// Set colum names
+	items.FieldNames = make([]string, numberoffields)
+	items.FieldNames[0] = "Order ID"
+	items.FieldNames[1] = "Name"
+	items.FieldNames[2] = "Date"
+	items.FieldNames[3] = "Status"
+	items.FieldNames[4] = "Mode"
+
+	// Set rows to be displayed
+	items.Rows = make([]Row, len(list))
+	items.Orders = make([]models.Order, len(list))
+	// items.RowID = make([]int, len(dishlist))
+
+	var tot = 0.00
+	for i := 0; i < len(list); i++ {
+		items.Rows[i] = Row{}
+		items.Rows[i].Description = make([]string, numberoffields)
+		items.Rows[i].Description[0] = list[i].ID
+		items.Rows[i].Description[1] = list[i].ClientName
+		items.Rows[i].Description[2] = list[i].Date
+		items.Rows[i].Description[3] = list[i].Status
+		items.Rows[i].Description[4] = list[i].EatMode
+
+		items.Orders[i] = list[i]
+
+		price, _ := strconv.ParseFloat(list[i].TotalGeral, 64)
+		tot = tot + price
+	}
+	items.Info.Total = strconv.FormatFloat(tot, 'f', 2, 64)
+
+	t.Execute(httpwriter, items)
+}
+
 // LoadDisplayForAdd is X
-func LoadDisplayForAdd(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials commonstruct.Credentials, sysid string) {
+func LoadDisplayForAdd(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, sysid string) {
 
 	// create new template
 	t, _ := template.ParseFiles("templates/order/indexadd.html", "templates/order/orderadd.html")
@@ -337,6 +426,9 @@ func LoadDisplayForAdd(httpwriter http.ResponseWriter, redisclient *redis.Client
 	}
 	items.Info.ApplicationID = credentials.ApplicationID
 	items.Info.IsAdmin = credentials.IsAdmin
+
+	activeactivity := activity.FindActiveAPI()
+	items.Info.EventID = activeactivity.Name
 
 	// Retrieve list of dishes by calling API to get dishes
 	// Always load here. Do not save to cache or leave it in memory since it can be changed anytime
@@ -358,7 +450,7 @@ func LoadDisplayForAdd(httpwriter http.ResponseWriter, redisclient *redis.Client
 }
 
 // LoadDisplayForView is
-func LoadDisplayForView(httpwriter http.ResponseWriter, httprequest *http.Request, redisclient *redis.Client, credentials commonstruct.Credentials, sysid string) {
+func LoadDisplayForView(httpwriter http.ResponseWriter, httprequest *http.Request, redisclient *redis.Client, credentials models.Credentials, sysid string) {
 
 	httprequest.ParseForm()
 
@@ -390,11 +482,11 @@ func LoadDisplayForView(httpwriter http.ResponseWriter, httprequest *http.Reques
 	items.Info.ApplicationID = credentials.ApplicationID
 	items.Info.IsAdmin = credentials.IsAdmin
 
-	items.OrderItem = order.Order{}
+	items.OrderItem = models.Order{}
 	items.OrderItem.ID = orderid
 	// items.OrderItem.ID = orderselected[0]
 
-	var orderfind = order.Order{}
+	var orderfind = models.Order{}
 	var ordername = items.OrderItem.ID
 
 	orderfind = FindAPI(sysid, redisclient, ordername)
@@ -451,7 +543,7 @@ func Add(httpwriter http.ResponseWriter, req *http.Request, redisclient *redis.C
 }
 
 // AddOrderClient is designed to add order and client for anonymous
-func AddOrderClient(httpwriter http.ResponseWriter, req *http.Request, redisclient *redis.Client, credentials commonstruct.Credentials, sysid string) {
+func AddOrderClient(httpwriter http.ResponseWriter, req *http.Request, redisclient *redis.Client, credentials models.Credentials, sysid string) {
 
 	defer req.Body.Close()
 	bodybyte, _ := ioutil.ReadAll(req.Body)
@@ -494,7 +586,7 @@ func AddOrderClient(httpwriter http.ResponseWriter, req *http.Request, redisclie
 		//
 
 		username := "Anonymous"
-		security.AnonymousLogin(httpwriter, req, redisclient, obj.ClientID, username)
+		securityhandler.AnonymousLogin(httpwriter, req, redisclient, obj.ClientID, username)
 
 		fmt.Fprintf(httpwriter, string(bresp)) // write data to response
 
@@ -559,6 +651,21 @@ func OrderisCompleted(httpwriter http.ResponseWriter, httprequest *http.Request,
 	return
 }
 
+// OrderisPlaced is test
+func OrderisPlaced(httpwriter http.ResponseWriter, httprequest *http.Request, redisclient *redis.Client, sysid string) {
+
+	orderid := httprequest.URL.Query().Get("orderid")
+	orderfind := FindAPI(sysid, redisclient, orderid)
+	orderfind.Status = "Placed"
+	orderfind.TimeCompleted = time.Now().String()
+
+	orderfindbyte, _ := json.Marshal(orderfind)
+
+	APICallUpdate(sysid, redisclient, orderfindbyte)
+
+	return
+}
+
 // OrderWillBePaidLater is test
 func OrderWillBePaidLater(httpwriter http.ResponseWriter, httprequest *http.Request, redisclient *redis.Client, sysid string) {
 
@@ -600,12 +707,12 @@ func LoadDisplayForUpdate(httpwriter http.ResponseWriter, httprequest *http.Requ
 	httprequest.ParseForm()
 
 	// Get all selected records
-	orderselected := httprequest.Form["dishes"]
+	orderselected := httprequest.Form["orders"]
 
 	var numrecsel = len(orderselected)
 
 	if numrecsel <= 0 {
-		http.Redirect(httpwriter, httprequest, "/dishlist", 301)
+		http.Redirect(httpwriter, httprequest, "/orderlist", 301)
 		return
 	}
 
@@ -620,19 +727,19 @@ func LoadDisplayForUpdate(httpwriter http.ResponseWriter, httprequest *http.Requ
 		Info       ControllerInfo
 		FieldNames []string
 		Rows       []Row
-		OrderItem  order.Order
+		OrderItem  models.Order
 	}
 
 	// create new template
-	t, _ := template.ParseFiles("html/index.html", "templates/dishupdate.html")
+	t, _ := template.ParseFiles("html/index.html", "templates/order/update.html")
 
 	items := DisplayTemplate{}
-	items.Info.Name = "Dish Add"
+	items.Info.Name = "Order Update"
 
-	items.OrderItem = order.Order{}
+	items.OrderItem = models.Order{}
 	items.OrderItem.ID = orderselected[0]
 
-	var objectfind = order.Order{}
+	var objectfind = models.Order{}
 	var orderid = items.OrderItem.ID
 
 	objectfind = APICallFind(sysid, redisclient, orderid)
@@ -650,12 +757,12 @@ func LoadDisplayForDelete(httpwriter http.ResponseWriter, httprequest *http.Requ
 	httprequest.ParseForm()
 
 	// Get all selected records
-	dishselected := httprequest.Form["dishes"]
+	dishselected := httprequest.Form["orders"]
 
 	var numrecsel = len(dishselected)
 
 	if numrecsel <= 0 {
-		http.Redirect(httpwriter, httprequest, "/dishlist", 301)
+		http.Redirect(httpwriter, httprequest, "/orderlist", 301)
 		return
 	}
 
@@ -670,19 +777,19 @@ func LoadDisplayForDelete(httpwriter http.ResponseWriter, httprequest *http.Requ
 		Info       ControllerInfo
 		FieldNames []string
 		Rows       []Row
-		DishItem   order.Order
+		DishItem   models.Order
 	}
 
 	// create new template
-	t, _ := template.ParseFiles("html/index.html", "templates/dishdelete.html")
+	t, _ := template.ParseFiles("html/index.html", "templates/order/delete.html")
 
 	items := DisplayTemplate{}
 	items.Info.Name = "Dish Delete"
 
-	items.DishItem = order.Order{}
+	items.DishItem = models.Order{}
 	items.DishItem.ClientID = dishselected[0]
 
-	var dishfind = order.Order{}
+	var dishfind = models.Order{}
 	var dishname = items.DishItem.ClientID
 
 	dishfind = APICallFind(sysid, redisclient, dishname)

@@ -2,7 +2,7 @@ package security
 
 import (
 	"encoding/json"
-	"festajuninaweb/areas/commonstruct"
+	"festajuninav2/models"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -508,7 +508,7 @@ func LoginPage(httpresponsewriter http.ResponseWriter, httprequest *http.Request
 
 	rediskey := "DanBTCjwt" + userid
 
-	var credentials commonstruct.Credentials
+	var credentials models.Credentials
 	credentials.UserID = userid
 	credentials.KeyJWT = rediskey
 	credentials.JWT = jwttoken
@@ -586,7 +586,7 @@ func AnonymousLogin(httpresponsewriter http.ResponseWriter, httprequest *http.Re
 		cookiealreadystored = "Yes"
 	}
 
-	resultado := commonstruct.Credentials{}
+	resultado := models.Credentials{}
 	resultado.JWT = "Anonymous"
 	resultado.ApplicationID = "Restaurante"
 
@@ -597,7 +597,7 @@ func AnonymousLogin(httpresponsewriter http.ResponseWriter, httprequest *http.Re
 
 	rediskey := "DanBTCjwt" + userid
 
-	var credentials commonstruct.Credentials
+	var credentials models.Credentials
 	credentials.UserID = userid
 	credentials.KeyJWT = rediskey
 	credentials.JWT = jwttoken

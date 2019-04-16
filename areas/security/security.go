@@ -8,7 +8,8 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
-	"festajuninaweb/areas/commonstruct"
+	"festajuninav2/areas/commonstruct"
+	"festajuninav2/models"
 	"fmt"
 	"io"
 	"log"
@@ -21,7 +22,7 @@ import (
 )
 
 // LoginUserV2 but not
-func LoginUserV2(sysid string, redisclient *redis.Client, userid string, password string) commonstruct.Credentials {
+func LoginUserV2(sysid string, redisclient *redis.Client, userid string, password string) models.Credentials {
 
 	mongodbvar := new(commonstruct.DatabaseX)
 
@@ -50,7 +51,7 @@ func LoginUserV2(sysid string, redisclient *redis.Client, userid string, passwor
 
 	defer resp2.Body.Close()
 
-	var response commonstruct.Credentials
+	var response models.Credentials
 
 	if err := json.NewDecoder(resp2.Body).Decode(&response); err != nil {
 		log.Println(err)
@@ -383,7 +384,7 @@ func ResetPassword(sysid string, redisclient *redis.Client, userid string, prefe
 // ValidateToken is half way
 func ValidateToken(redisclient *redis.Client, httprequest *http.Request) string {
 
-	var credtemp commonstruct.Credentials
+	var credtemp models.Credentials
 
 	cookie, _ := httprequest.Cookie("DanBTCjwt")
 	if cookie == nil {
@@ -406,8 +407,8 @@ func ValidateToken(redisclient *redis.Client, httprequest *http.Request) string 
 }
 
 // ValidateTokenV2 will get info from cache
-func ValidateTokenV2(redisclient *redis.Client, httprequest *http.Request) (string, commonstruct.Credentials) {
-	var credentials commonstruct.Credentials
+func ValidateTokenV2(redisclient *redis.Client, httprequest *http.Request) (string, models.Credentials) {
+	var credentials models.Credentials
 
 	credentials.ApplicationID = "Restaurante"
 	credentials.UserID = "Anonymous"
@@ -427,7 +428,7 @@ func ValidateTokenV2(redisclient *redis.Client, httprequest *http.Request) (stri
 		// Issue keys - should be stored in the database API Key or Secret I think
 		//
 		if clientsecret == "BypassSecurity" {
-			var credentialsmachine commonstruct.Credentials
+			var credentialsmachine models.Credentials
 			credentialsmachine.ApplicationID = "Restaurante"
 			credentialsmachine.UserID = "Machine"
 			credentialsmachine.JWT = clientsecret
@@ -501,7 +502,7 @@ func Hashstring(str string) string {
 }
 
 // GetUserDetails function
-func GetUserDetails(sysid string, redisclient *redis.Client, bodybyte []byte) commonstruct.Credentials {
+func GetUserDetails(sysid string, redisclient *redis.Client, bodybyte []byte) models.Credentials {
 
 	envirvar := new(commonstruct.RestEnvVariables)
 	bodystr := string(bodybyte[:])
@@ -532,7 +533,7 @@ func GetUserDetails(sysid string, redisclient *redis.Client, bodybyte []byte) co
 
 	}
 
-	var usercred commonstruct.Credentials
+	var usercred models.Credentials
 	if err := json.NewDecoder(resp2.Body).Decode(&usercred); err != nil {
 		log.Println(err)
 	} else {

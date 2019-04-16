@@ -2,7 +2,7 @@ package helper
 
 import (
 	"encoding/json"
-	"festajuninaweb/areas/commonstruct"
+	"festajuninav2/areas/commonstruct"
 	"fmt"
 	"io/ioutil"
 
@@ -16,22 +16,13 @@ var envirvar commonstruct.RestEnvVariables
 
 // Readfileintostruct is
 func Readfileintostruct() commonstruct.RestEnvVariables {
-	dat, err := ioutil.ReadFile("feijoadajusu.ini")
+	dat, err := ioutil.ReadFile("festajuninav2.ini")
 	check(err)
 	fmt.Print(string(dat))
 
 	var restenv commonstruct.RestEnvVariables
 
 	json.Unmarshal(dat, &restenv)
-
-	if restenv.APIAPIServerIPAddress == "" {
-		restenv.APIAPIServerIPAddress = "localhost"
-		restenv.APIAPIServerPort = "1520"
-		restenv.WEBServerPort = ":1510"
-		restenv.RunningFromServer = "Ubuntu"
-		restenv.WEBDebug = "Y"
-		restenv.ConfigFileFound = "Not found - hardcoded values"
-	}
 
 	return restenv
 }
@@ -42,7 +33,7 @@ func GetSYSID() string {
 
 	if SYSID == "" {
 
-		dat, err := ioutil.ReadFile("feijoadajusu.ini")
+		dat, err := ioutil.ReadFile("festajuninav2.ini")
 		check(err)
 		fmt.Print(string(dat))
 

@@ -6,7 +6,7 @@ package cachehandler
 
 import (
 	"encoding/json"
-	"festajuninaweb/areas/commonstruct"
+	"festajuninav2/areas/commonstruct"
 	"fmt"
 	"log"
 	"net/http"
