@@ -12,6 +12,13 @@
                 <option value="EveryEvent">Every Event</option>
             {{ end }}
 
+            {{ if eq .DishItem.ActivityType "FestaJunina"}}
+                <option selected="selected">Festa Junina</option>
+            {{ else }}
+                <option value="FestaJunina">Festa Junina</option>
+            {{ end }}
+
+
             {{ if eq .DishItem.ActivityType "Feijoada"}}
                 <option selected="selected">Feijoada</option>
             {{ else }}

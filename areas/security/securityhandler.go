@@ -2,6 +2,7 @@ package security
 
 import (
 	"encoding/json"
+	"festajuninav2/areas/securityhandler"
 	"festajuninav2/models"
 	"fmt"
 	"io/ioutil"
@@ -102,6 +103,8 @@ func SignupPage(httpresponsewriter http.ResponseWriter, req *http.Request, redis
 // UserRolesShowPage is for the user to signup
 func UserRolesShowPage(httpresponsewriter http.ResponseWriter, req *http.Request, redisclient *redis.Client) {
 
+	req.ParseForm()
+
 	type ControllerInfo struct {
 		Name          string
 		Message       string
@@ -121,16 +124,29 @@ func UserRolesShowPage(httpresponsewriter http.ResponseWriter, req *http.Request
 	// Call Server to get details
 	//
 
-	if req.Method != "POST" {
+	username := ""
+
+	// if username is passed in (selected from list)
+	userselected := req.Form["users"]
+	var numrecsel = len(userselected)
+	if numrecsel > 0 {
+		username = userselected[0]
+	}
+
+	if req.Method != "POST" || username != "" {
+
+		// username = req.URL.Query().Get("userid")
 
 		t, _ := template.ParseFiles("templates/security/viewuserrolesheader.html", "templates/security/viewuserrolesdetails.html")
 		items.Info.Message = ""
+		items.Info.UserName = username
+
 		t.Execute(httpresponsewriter, items)
 
 		return
 	}
 
-	username := req.FormValue("username") // email address
+	username = req.FormValue("username") // email address
 	username = strings.ToUpper(username)
 
 	if username == "" {
@@ -383,6 +399,66 @@ func UserRolesUpdate(httpresponsewriter http.ResponseWriter, req *http.Request, 
 
 		fmt.Fprintf(httpresponsewriter, string(bresp)) // write data to response
 	}
+}
+
+// UserList = list users
+//
+func UserList(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, sysid string) {
+
+	// create new template
+	t, _ := template.ParseFiles("html/index.html", "templates/security/listtemplate.html")
+
+	// Get list of users (api call)
+	//
+	actlist, error := securityhandler.UserListAPI()
+
+	// Assemble the display structure for html template
+	//
+	items := DisplayTemplate{}
+	items.Info.Name = "User List"
+	items.Info.UserID = credentials.UserID
+	items.Info.UserName = credentials.Name
+	items.Info.ApplicationID = credentials.ApplicationID
+	items.Info.IsAdmin = credentials.IsAdmin
+
+	if error.IsSuccessful == "false" {
+
+		items.Info.Name = "User List " + error.ErrorDescription
+
+		// do something
+	}
+
+	var numberoffields = 7
+
+	// Set colum names
+	items.FieldNames = make([]string, numberoffields)
+	items.FieldNames[0] = "UserID"
+	items.FieldNames[1] = "Name"
+	items.FieldNames[2] = "ApplicationID"
+	items.FieldNames[3] = "IsAdmin"
+	items.FieldNames[4] = "Status"
+	items.FieldNames[5] = "ClaimSet"
+	items.FieldNames[6] = "Value"
+
+	// Set rows to be displayed
+	items.Rows = make([]Row, len(actlist))
+	// items.RowID = make([]int, len(actlist))
+
+	for i := 0; i < len(actlist); i++ {
+		items.Rows[i] = Row{}
+		items.Rows[i].Description = make([]string, numberoffields)
+		items.Rows[i].Description[0] = actlist[i].UserID
+		items.Rows[i].Description[1] = actlist[i].Name
+		items.Rows[i].Description[2] = actlist[i].ApplicationID
+		items.Rows[i].Description[3] = actlist[i].IsAdmin
+		items.Rows[i].Description[4] = actlist[i].Status
+		if len(actlist[i].ClaimSet) > 0 {
+			items.Rows[i].Description[5] = actlist[i].ClaimSet[0].Type
+			items.Rows[i].Description[6] = actlist[i].ClaimSet[0].Value
+		}
+	}
+
+	t.Execute(httpwriter, items)
 }
 
 // LogoutPage is for the user to logout

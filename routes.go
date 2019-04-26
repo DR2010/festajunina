@@ -73,9 +73,11 @@ var routes = Routes{
 	Route{"requestcode", "POST", "/requestcode", requestCode},
 	Route{"changepassword", "POST", "/changepassword", changePassword},
 	Route{"userrolesshowpage", "GET", "/userrolesshowpage", userRolesShowPage},
+	Route{"userrolesshowpage", "POST", "/userrolesshowpage", userRolesShowPage},
 	Route{"userrolesgetdetails", "POST", "/userrolesgetdetails", userRolesGetDetails},
 	Route{"userrolesgetdetails", "GET", "/userrolesgetdetails", userRolesGetDetails},
 	Route{"userrolesupdate", "POST", "/userrolesupdate", userRolesUpdate},
+	Route{"userlist", "GET", "/userlist", userlist},
 	// ----------------------------------------------------------- Dishes
 	Route{"dishlist", "GET", "/dishlist", dishlist},
 	Route{"dishlistpictures", "GET", "/dishlistpictures", dishlistpictures},
@@ -86,6 +88,15 @@ var routes = Routes{
 	Route{"dishadd", "POST", "/dishadd", dishadd},
 	Route{"dishupdate", "POST", "/dishupdate", dishupdate},
 	Route{"dishdelete", "POST", "/dishdelete", dishdelete},
+	// ----------------------------------------------------------- Activity
+	Route{"activitylist", "GET", "/activitylist", activitylist},
+	Route{"activityadddisplay", "POST", "/activityadddisplay", activityadddisplay},
+	Route{"activityupdatedisplay", "POST", "/activityupdatedisplay", activityupdatedisplay},
+	Route{"activityviewdisplay", "GET", "/activityviewdisplay", activityupdatedisplay},
+	Route{"activityadd", "POST", "/activityadd", activityadd},
+	Route{"activityupdate", "POST", "/activityupdate", activityupdate},
+	Route{"activitydelete", "POST", "/activitydelete", activitydeletemultiple},
+	// -----------------------------------------------------------
 	Route{"showcache", "GET", "/showcache", showcache},
 	Route{"errorpage", "POST", "/errorpage", errorpage},
 	// ----------------------------------------------------------- Order

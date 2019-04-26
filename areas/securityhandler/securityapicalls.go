@@ -8,9 +8,9 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
-	"feijoadajusu/areas/commonstruct"
-	"feijoadajusu/areas/helper"
-	"feijoadajusu/models"
+	"festajuninav2/areas/commonstruct"
+	"festajuninav2/areas/helper"
+	"festajuninav2/models"
 	"fmt"
 	"io"
 	"log"
@@ -623,7 +623,7 @@ func UserListAPI() ([]models.Credentials, commonstruct.Resultado) {
 	if err != nil {
 		// log.Fatal("Do: ", err)
 		log.Println(err)
-		resultado.ErrorDescription = " = Error: Dishes List not available, please try later."
+		resultado.ErrorDescription = " = Error: Security List not available, please try later."
 		resultado.IsSuccessful = "false"
 		resultado.ErrorCode = "0102" // can't reach destination
 		return emptydisplay, resultado

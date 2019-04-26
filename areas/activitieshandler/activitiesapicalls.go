@@ -87,7 +87,7 @@ func actlistV2() ([]activities.Activity, commonstruct.Resultado) {
 	if err != nil {
 		// log.Fatal("Do: ", err)
 		log.Println(err)
-		resultado.ErrorDescription = " = Error: Dishes List not available, please try later."
+		resultado.ErrorDescription = " = Error: Activities List not available, please try later."
 		resultado.IsSuccessful = "false"
 		resultado.ErrorCode = "0102" // can't reach destination
 		return emptydisplay, resultado
@@ -95,16 +95,16 @@ func actlistV2() ([]activities.Activity, commonstruct.Resultado) {
 
 	defer resp.Body.Close()
 
-	var dishlist []activities.Activity
+	var activitylist []activities.Activity
 
-	if err := json.NewDecoder(resp.Body).Decode(&dishlist); err != nil {
+	if err := json.NewDecoder(resp.Body).Decode(&activitylist); err != nil {
 		log.Println(err)
 	}
 
 	resultado.ErrorCode = "0001"
 	resultado.ErrorDescription = "Successful transaction"
 	resultado.IsSuccessful = "true"
-	return dishlist, resultado
+	return activitylist, resultado
 }
 
 // APIcallAdd is

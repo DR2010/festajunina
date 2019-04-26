@@ -6,13 +6,13 @@
     <a href="/orderlist" class="btn btn-md btn-success">Orders</a>
     <a href="/instructions" class="btn btn-md btn-success">Instructions</a>
 
-    {{ if eq .Info.Application "Restaurante" }}
-        {{ if eq .Info.IsAdmin "Yes" }}
+    {{ if eq .Info.IsAdmin "Yes" }}
         <a href="/dishlist" class="btn btn-md btn-success ">Dishes</a>
+        <a href="/activitylist" class="btn btn-md btn-success ">Activities</a>
+        <a href="/userlist" class="btn btn-md btn-success">Users</a>
         <a href="/userrolesshowpage" class="btn btn-md btn-success ">User Roles</a>
         <a href="/saveordertosqlX" class="btn btn-md btn-success">Save to MySQL</a>
-        {{ end }}
-    {{end}}
+    {{ end }}
 
 </div>
 

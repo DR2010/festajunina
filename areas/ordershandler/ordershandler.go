@@ -14,7 +14,7 @@ import (
 	"strconv"
 	"time"
 
-	activity "festajuninaV2/areas/activitieshandler"
+	activity "festajuninav2/areas/activitieshandler"
 	dish "festajuninav2/areas/disheshandler"
 	securityhandler "festajuninav2/areas/securityhandler"
 	models "festajuninav2/models"

@@ -43,6 +43,7 @@ type DisplayTemplate struct {
 	FieldNames []string
 	Rows       []Row
 	Pratos     []dishes.Dish
+	Activities []models.Activity
 }
 
 var mongodbvar commonstruct.DatabaseX
@@ -88,6 +89,7 @@ func List(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials
 
 	// Set rows to be displayed
 	items.Rows = make([]Row, len(actlist))
+	items.Activities = make([]models.Activity, len(actlist))
 	// items.RowID = make([]int, len(actlist))
 
 	for i := 0; i < len(actlist); i++ {
@@ -99,6 +101,9 @@ func List(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials
 		items.Rows[i].Description[3] = actlist[i].Status
 		items.Rows[i].Description[4] = actlist[i].StartDate
 		items.Rows[i].Description[5] = actlist[i].EndDate
+
+		// items.Activities[i] = models.Activity{}
+		items.Activities[i] = actlist[i]
 	}
 
 	t.Execute(httpwriter, items)
@@ -179,11 +184,18 @@ func LoadDisplayForUpdate(httpwriter http.ResponseWriter, httprequest *http.Requ
 	// Get all selected records
 	activityselected := httprequest.Form["activities"]
 
-	var numrecsel = len(activityselected)
+	// get the activity id from the request
+	activityid := httprequest.URL.Query().Get("activityid")
 
-	if numrecsel <= 0 {
-		http.Redirect(httpwriter, httprequest, "/activitylist", 301)
-		return
+	if activityid == "" {
+		var numrecsel = len(activityselected)
+
+		if numrecsel <= 0 {
+			http.Redirect(httpwriter, httprequest, "/activitylist", 301)
+			return
+		}
+
+		activityid = activityselected[0]
 	}
 
 	type ControllerInfo struct {
@@ -192,6 +204,7 @@ func LoadDisplayForUpdate(httpwriter http.ResponseWriter, httprequest *http.Requ
 		UserID      string
 		Currency    string
 		Application string
+		IsAdmin     string
 	}
 	type Row struct {
 		Description []string
@@ -211,9 +224,10 @@ func LoadDisplayForUpdate(httpwriter http.ResponseWriter, httprequest *http.Requ
 	items.Info.Currency = "SUMMARY"
 	items.Info.UserID = credentials.UserID
 	items.Info.Application = credentials.ApplicationID
+	items.Info.IsAdmin = credentials.IsAdmin
 
 	items.Item = models.Activity{}
-	items.Item.Name = activityselected[0]
+	items.Item.Name = activityid
 
 	var activitiesfind = models.Activity{}
 	var activitiesname = items.Item.Name

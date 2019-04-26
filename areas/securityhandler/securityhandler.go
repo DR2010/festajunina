@@ -2,7 +2,7 @@ package securityhandler
 
 import (
 	"encoding/json"
-	"feijoadajusu/models"
+	"festajuninav2/models"
 	"fmt"
 
 	"io/ioutil"

@@ -1,6 +1,6 @@
 // Package models is a orders for packages
 // -------------------------------------
-// .../feijoadajusu/models/orders.go
+// .../festajuninav2/models/orders.go
 // -------------------------------------
 package models
 

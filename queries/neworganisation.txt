@@ -9,3 +9,5 @@ mongoexport --db restaurante --collection security --out sec.json
 
 == Importar os usuarios no novo banco and it is all good!
 mongoimport --db TheHouseOfThePath --collection security --file sec.json
+
+mongoimport --db festajunina --collection security --file sec.json

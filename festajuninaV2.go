@@ -16,7 +16,7 @@ package main
 
 import (
 	"database/sql"
-	"festajuninaV2/areas/activitieshandler"
+	"festajuninav2/areas/activitieshandler"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -203,6 +203,18 @@ func userRolesGetDetails(httpresponsewriter http.ResponseWriter, httprequest *ht
 func userRolesUpdate(httpresponsewriter http.ResponseWriter, httprequest *http.Request) {
 
 	security.UserRolesUpdate(httpresponsewriter, httprequest, redisclient, sysid)
+}
+
+func userlist(httpwriter http.ResponseWriter, req *http.Request) {
+
+	error, credentials := security.ValidateTokenV2(redisclient, req)
+
+	if error == "NotOkToLogin" {
+		http.Redirect(httpwriter, req, "/login", 303)
+		return
+	}
+
+	security.UserList(httpwriter, redisclient, credentials, sysid)
 }
 
 func logoutPage(httpresponsewriter http.ResponseWriter, httprequest *http.Request) {
