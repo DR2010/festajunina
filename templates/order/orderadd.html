@@ -1,37 +1,37 @@
 {{define "listtemplate"}}
 
-<div id="header" class="navbar navbar-left" id="navbar">
-    <a href="/" class="btn btn-md btn-danger">Home</a>
-    <a href="/orderlist" class="btn btn-md btn-success ">Back</a>
+<div id="header" id="navbar">
+    <a href="/" class="ui red button">Home</a>
+    <a href="/orderlist" class="ui green button">Back</a>
 </div>
 <p/>
 
 <h4>{{ .Info.Name }} - {{ .Info.UserName }}</h4>
 
 Event:<br>
-<input type="text" id="eventid" name="eventid" value="{{ .Info.EventID }}" readonly>
+<input class="ui input" type="text" id="eventid" name="eventid" value="{{ .Info.EventID }}" readonly>
 
 <br>User ID:<br>
 <input type="text" id="userID" name="userID" value="{{ .Info.UserID }}" size="30" style="text-align:left;" readonly>
 
 <br>Order Name:<br>
-<input type="text" id="orderClientName" name="orderClientName" value="" onblur="getdatetime()" required placeholder="Name for the order">
+<input class="ui input" type="text" id="orderClientName" name="orderClientName" value="" onblur="getdatetime()" required placeholder="Name for the order">
 
 <br>Pick-up Time<br>
-<select name="pickuptime" id="pickuptime">
+<select class="ui dropdown" name="pickuptime" id="pickuptime">
+    <option value="WhenReady">When Ready</option>
     <option value="1100AM">11:00AM</option>
     <option value="1200PM">12:00PM</option>
     <option value="0100PM">01:00PM</option>
     <option value="0200PM">02:00PM</option>
     <option value="0300PM">03:00PM</option>
     <option value="0400PM">04:00PM</option>
-    <option value="WhenReady">When Ready</option>
 </select>
 
 <br>
 
 <h4>Select your options below:</h4>
-<select name="pratoname" id="pratoname">
+<select class="ui dropdown" name="pratoname" id="pratoname">
         {{range .Pratos }}
             <option value={{.Name}}>{{ .Name }} - {{ .Price }}</option>
         {{end}}
@@ -39,7 +39,7 @@ Event:<br>
 
 <h4>Qty:</h4>
 
-<select name="pratoqtd" id="pratoqtd">
+<select class="ui dropdown" name="pratoqtd" id="pratoqtd">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -57,7 +57,7 @@ Event:<br>
 
 <p/>
 <br>Order Number:<br>
-<input type="text" id="orderID" name="orderID" readonly class="btn btn-md btn-success">
+<input type="text" id="orderID" name="orderID" readonly class="ui orange button">
 <p/>
 
 <div style="float:left;" class="table-responsive">
@@ -75,8 +75,10 @@ Event:<br>
 </div>
 
 <table></table>
-
-<button onclick="saveOrder() ">Place Order</button>
+<input type="text" id="totalorder" name="totalorder" readonly class="ui orange button">
+<p/>
+<p/>
+<button class="ui teal button" onclick="saveOrder() ">Place Order</button>
 <!-- <button onclick="saveOrder2() ">Place Order</button> -->
 
 <p/>
@@ -85,7 +87,7 @@ Event:<br>
 <input type="text" id="orderDate" name="orderDate" value="" size="5" readonly>
 <input type="text" id="orderTime" name="orderTime" value="" size="5" style="text-align:left;" readonly>
 <br> Status:<br>
-<input type="text" id="status" name="status" value="Not Placed" class="btn btn-md btn-success">
+<input type="text" id="status" name="status" value="Not Placed" class="ui green button">
 
 
 <br> Message:<br>

@@ -48,7 +48,7 @@ var mongodbvar commonstruct.DatabaseX
 func HomePage(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials) {
 
 	// create new template
-	t, _ := template.ParseFiles("html/homepage.html", "templates/main/pagebodytemplate.html")
+	t, _ := template.ParseFiles("templates/main/homepage.html", "templates/main/pagebodytemplate.html")
 
 	// Assemble the display structure for html template
 	//

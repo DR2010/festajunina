@@ -48,6 +48,14 @@ type DisplayTemplate struct {
 
 var mongodbvar commonstruct.DatabaseX
 
+// PingSite = assemble results of API call to dish list
+//
+func PingSite(httpwriter http.ResponseWriter, redisclient *redis.Client, sysid string) {
+
+	pingsite()
+
+}
+
 // List = assemble results of API call to dish list
 //
 func List(httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, sysid string) {

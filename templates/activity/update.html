@@ -5,7 +5,7 @@
     <div>
         <br><b>Type: </b>
         <p/>
-        <select name="activitytype" id="activitytype" value="N" readonly>
+        <select name="activitytype" id="activitytype" value="N" class="ui dropdown">
              {{ if eq .Item.Type "Feijoada"}}
                 <option selected="selected">Feijoada</option>
              {{ else }}
@@ -47,7 +47,7 @@
 
         <p/>
         <br><b>Status: </b>
-        <select name="activitystatus" id="activitystatus" value="{{ .Item.Status }}">
+        <select name="activitystatus" id="activitystatus" value="{{ .Item.Status }}" class="ui dropdown">
             {{ if eq .Item.Status "ACTIVE"}}
                 <option selected="selected">ACTIVE</option>
                 <option value="INACTIVE">INACTIVE</option>

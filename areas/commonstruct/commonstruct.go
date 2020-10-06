@@ -6,6 +6,7 @@ type DatabaseX struct {
 	Database   string // database name
 	Collection string // collection name
 	APIServer  string // apiserver name
+	SYSID      string // SYSID name
 }
 
 // Resultado is a struct
@@ -44,4 +45,5 @@ type RestEnvVariables struct {
 	SecurityMicroservice     string // Microservices IP Address
 	SecurityMicroserviceURL  string // Microservices IP Address
 	SYSID                    string //
+	PingSiteURL              string //
 }

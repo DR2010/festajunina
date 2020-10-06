@@ -40,6 +40,7 @@ function addNewItem() {
 
     // Check if order has been placed
     var orderID = document.getElementById("orderID");
+    var totalorder = document.getElementById("totalorder");
 
     if (orderID.value != "") {
         message.value = "Order already placed!"
@@ -76,6 +77,13 @@ function addNewItem() {
     var preco = parseFloat(pricefromhtml.value);
     var quantidade = parseFloat(plateqtd.value);
     var total = preco * quantidade;
+    var totalgeral = total;
+    var subtotal = 0;
+
+    if (totalorder.value != "") {
+        subtotal = parseFloat(totalorder.value);
+    }
+    totalgeral = subtotal + total;
 
     var sel = document.getElementById("pratoname").selectedIndex;
 
@@ -95,13 +103,62 @@ function addNewItem() {
 
     var totalstrdec = parseFloat(total).toFixed(2)
     cell4.innerHTML = totalstrdec;
+
+    // Trying to show total
+    // totalorder.value = parseFloat(totalgeral).toFixed(2)
+
     // b = "<button type=button onclick='RemoveRow(this)'>Remove</button>";
     // cell5.innerHTML = b;
 
     // cell4.innerHTML = total;
     // cell3.innerHTML = plateqtd.value * pricefromhtml.value;
     // cell3.innerHTML = plateqtd.value * prato[sel].price;
+
+    calculatetotal();
 }
+
+
+// -------------------------
+// Recalculate total invoice
+// -------------------------
+function calculatetotal() {
+
+    var totalorder = document.getElementById("totalorder");
+    var oTable = document.getElementById('myTable');
+    var rowLength = oTable.rows.length;
+
+    var totalgeral = 0;
+
+    for (i = 0; i < rowLength; i++) {
+
+        var oCells = oTable.rows.item(i).cells;
+        var cellLength = oCells.length;
+
+        var total = "";
+        var totalval = 0;
+
+        for (var j = 0; j < cellLength; j++) {
+            var cellVal = oCells.item(j).innerHTML;
+            if (j == 0) {
+                action = cellVal;
+            }
+            if (j == 4) {
+                total = cellVal;
+            }
+        }
+
+        if (action == "") continue;
+        if (action == "Action") continue;
+
+        totalval = parseFloat(total)
+
+        totalgeral = totalgeral + totalval;
+    }
+
+    totalvaldisplay = parseFloat(totalgeral).toFixed(2)
+    totalorder.value = totalvaldisplay;
+}
+
 
 // --------------------------------------
 //       Clean up fields
@@ -180,6 +237,7 @@ function removeSelectedRows() {
 
 function RemoveRow(elm) {
     elm.parentNode.parentNode.parentNode.removeChild(elm.parentNode.parentNode);
+    calculatetotal();
  }
 
 
@@ -769,4 +827,33 @@ function login() {
     http.send(paramsjson);
 
 }
+
+
+function previewFile(){
+    var preview = document.querySelector('img'); //selects the query named img
+    var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+    var reader  = new FileReader();
+
+    var dishimage = document.getElementById("dishimage");
+    var imagename = document.getElementById("imagename");
+    var imageinstring = document.getElementById("imageinstring");
+    var dishimagebase64 = document.getElementById("dishimagebase64");
+
+    reader.onloadend = function () {
+        preview.src = reader.result;
+        imageinstring.value = preview.src;
+        dishimagebase64.src = preview.src;
+    }
+
+    if (file) {
+        reader.readAsDataURL(file); //reads the data as a URL
+        dishimage.value = file.name;
+        imagename.value = file.name;
+
+    } else {
+        preview.src = "";
+    }
+
+}
+
 

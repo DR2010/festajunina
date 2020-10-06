@@ -250,6 +250,7 @@ func DishupdateAPI(dishUpdate dishes.Dish) commonstruct.Resultado {
 	data.Add("dishdescription", dishUpdate.Description)
 	data.Add("dishdescricao", dishUpdate.Descricao)
 	data.Add("dishactivitytype", dishUpdate.ActivityType)
+	data.Add("dishimagebase64", dishUpdate.ImageBase64)
 
 	u, _ := url.ParseRequestURI(apiURL)
 	u.Path = resource

@@ -218,6 +218,7 @@ func Update(httpwriter http.ResponseWriter, req *http.Request, redisclient *redi
 	dishtoadd.Description = req.FormValue("dishdescription")
 	dishtoadd.Descricao = req.FormValue("dishdescricao")
 	dishtoadd.ActivityType = req.FormValue("dishactivitytype")
+	dishtoadd.ImageBase64 = req.FormValue("imageinstring")
 
 	ret := DishupdateAPI(dishtoadd)
 

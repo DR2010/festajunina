@@ -102,6 +102,7 @@ var routes = Routes{
 	// ----------------------------------------------------------- Order
 
 	Route{"activitylist", "GET", "/activitylist", activitylist},
+	Route{"pingsite", "GET", "/pingsite", pingsite},
 
 	Route{"activityadddisplay", "POST", "/activityadddisplay", activityadddisplay},
 	Route{"activityupdatedisplay", "POST", "/activityupdatedisplay", activityupdatedisplay},
@@ -118,6 +119,8 @@ var routes = Routes{
 	Route{"orderlistcompleted", "POST", "/orderlistcompleted", orderlistcompleted},
 	Route{"orderliststatus", "GET", "/orderliststatus", orderliststatusactivity},
 	Route{"orderliststatus", "POST", "/orderliststatus", orderliststatusactivity},
+	Route{"orderliststatusactivityuser", "GET", "/orderliststatusactivityuser", orderliststatusactivityuser},
+	Route{"orderliststatusactivityuser", "POST", "/orderliststatusactivityuser", orderliststatusactivityuser},
 	// Route{"orderliststatus", "GET", "/orderliststatus", orderliststatus},
 	// Route{"orderliststatus", "POST", "/orderliststatus", orderliststatus},
 	Route{"orderadddisplay", "POST", "/orderadddisplay", orderadddisplay},

@@ -1,38 +1,36 @@
 {{ define "pagebodytemplate" }}
 
-<div id="header" class="navbar navbar-left" id="navbar">
-    <a href="/" class="btn btn-md btn-danger ">Home</a>
-    <a href="/dishlistpictures" class="btn btn-md btn-success ">Menu</a>
-    <a href="/orderlist" class="btn btn-md btn-success">Orders</a>
-    <a href="/instructions" class="btn btn-md btn-success">Instructions</a>
-
+<div id="header" id="navbar">
+    <a href="/" class="ui red button">Home</a>
+    <a href="/dishlistpictures" class="ui teal button">Menu</a>
+    <a href="/orderlist" class="ui teal button">Orders</a>
+    <a href="/instructions" class="ui teal button">Instructions</a> 
+    
     {{ if eq .Info.IsAdmin "Yes" }}
-        <a href="/dishlist" class="btn btn-md btn-success ">Dishes</a>
-        <a href="/activitylist" class="btn btn-md btn-success ">Activities</a>
-        <a href="/userlist" class="btn btn-md btn-success">Users</a>
-        <a href="/userrolesshowpage" class="btn btn-md btn-success ">User Roles</a>
-        <a href="/saveordertosqlX" class="btn btn-md btn-success">Save to MySQL</a>
+        <a href="/dishlist" class="ui teal button">Dishes</a>
+        <a href="/activitylist" class="ui teal button">Activities</a>
+        <a href="/userlist" class="ui teal button">Users</a>
+        <a href="/userrolesshowpage" class="ui teal button">User Roles</a>
     {{ end }}
-
 </div>
 
 <h3>Welcome, {{ .Info.Name }}.</h3>
 
 <div>
-    <img src="images/festajunina10.jpg" width="500">
+    <img src="images/festajunina10.jpg" width="300">
 </div>
 
 <h2>Organisation: {{ .Info.Organisation }}.</h2>
 <h2>Database: {{ .Info.Database }}.</h2>
 
-<p/> 
+<p/>
 
 <form action="Submit" method="POST" />
 </form>
 
-<div id="header" class="navbar navbar-right" id="navbar">
-    <a href="/login" class="btn btn-md btn-warning ">Login</a> 
-    <a href="/logout" class="btn btn-md btn-warning ">Logout</a> 
+<div id="header" id="navbar">
+    <a href="/login" class="ui violet basic button">Login</a>
+    <a href="/logout" class="ui violet basic button">Logout</a>
 </div>
 
 {{end}}

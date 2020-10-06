@@ -56,6 +56,55 @@ func actlist() []activities.Activity {
 	return dishlist
 }
 
+// pingsite sending error back
+func pingsite() commonstruct.Resultado {
+
+	var resultado commonstruct.Resultado
+	resultado.ErrorCode = "0001"
+	resultado.ErrorDescription = "Successful transaction"
+	resultado.IsSuccessful = "true"
+
+	var pingsiteURL string
+
+	pingsiteURL = helper.Getvaluefromcache("PingSiteURL")
+
+	urlrequest := pingsiteURL
+
+	url := fmt.Sprintf(urlrequest)
+
+	// Build the request
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatal("NewRequest: ", err)
+		return resultado
+	}
+
+	client := &http.Client{}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		// log.Fatal("Do: ", err)
+		log.Println(err)
+		resultado.ErrorDescription = " = Site not available."
+		resultado.IsSuccessful = "false"
+		resultado.ErrorCode = "0102" // can't reach destination
+
+		fmt.Println(">>> Ping Server not available")
+
+		return resultado
+	}
+
+	defer resp.Body.Close()
+
+	resultado.ErrorCode = "0001"
+	resultado.ErrorDescription = "Successful transaction"
+	resultado.IsSuccessful = "true"
+
+	fmt.Println(">>> Ping Server AVAILABLE")
+
+	return resultado
+}
+
 // ListV2 sending error back
 func actlistV2() ([]activities.Activity, commonstruct.Resultado) {
 

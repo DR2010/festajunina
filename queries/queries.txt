@@ -58,7 +58,10 @@ db.security.replaceOne(  { "_id" : ObjectId("5a797366be49ce7f05489f5b") },{ "_id
 -----------
 
 mongoexport --db restaurante --collection security --out sec.json
+mongoexport --db festajunina --collection security --out sec.json
 mongoimport --db TheHouseOfThePath --collection security --file sec.json
+mongoimport --db festajunina --collection security --file sec.json
+mongoimport --db festajunina --collection dishes --file dishes.json
 
 mongodump --out /data/backup/
 mongodump --out /home/daniel
@@ -72,7 +75,10 @@ Mais dois
 
 db.getSiblingDB("restaurante").getCollection("security").find({});
 db.getSiblingDB("festajunina").getCollection("security").find({});
-db.getSiblingDB("festajunina").getCollection("security").find({ userid : "REST@REST.COM" });
+db.getSiblingDB("festajunina").getCollection("order").find({ });
+db.getSiblingDB("festajunina").getCollection("dishes").find({ });
+
+db.getSiblingDB("festajunina").getCollection("orders").find({ "status":"Placed", "eventid":"FeijoadaX", "clientname":"FejOrder" });
 
 db.getSiblingDB("festajunina").getCollection("security").remove( { "_id" : ObjectId("5a9296042a6d97d6326d9005") } )
 db.getSiblingDB("restaurante").getCollection("security").remove( { "_id" : ObjectId("5a9296042a6d97d6326d9005") } );

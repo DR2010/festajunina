@@ -36,6 +36,7 @@ type ControllerInfo struct {
 	IsAnonymous   string //
 	Total         string
 	EventID       string //
+	ClientName    string //
 
 }
 
@@ -121,6 +122,7 @@ func ListV2(httpwriter http.ResponseWriter, redisclient *redis.Client, credentia
 	items.Info.UserName = credentials.Name
 	items.Info.ApplicationID = credentials.ApplicationID
 	items.Info.IsAdmin = credentials.IsAdmin
+	items.Info.ClientName = "Open"
 
 	activeactivity := activity.FindActiveAPI()
 	items.Info.EventID = activeactivity.Name
@@ -372,8 +374,75 @@ func ListStatusActivity(httprequest *http.Request, httpwriter http.ResponseWrite
 	items.Info.Name = "Order List"
 	items.Info.UserID = credentials.UserID
 	items.Info.UserName = credentials.Name
+
 	items.Info.ApplicationID = credentials.ApplicationID
 	items.Info.IsAdmin = credentials.IsAdmin
+
+	// Show status. Client Name only used for PayLater.
+	// 02.Jun.2019 - 19:26
+	items.Info.ClientName = status
+
+	var numberoffields = 5
+
+	// Set colum names
+	items.FieldNames = make([]string, numberoffields)
+	items.FieldNames[0] = "Order ID"
+	items.FieldNames[1] = "Name"
+	items.FieldNames[2] = "Date"
+	items.FieldNames[3] = "Status"
+	items.FieldNames[4] = "Mode"
+
+	// Set rows to be displayed
+	items.Rows = make([]Row, len(list))
+	items.Orders = make([]models.Order, len(list))
+	// items.RowID = make([]int, len(dishlist))
+
+	var tot = 0.00
+	for i := 0; i < len(list); i++ {
+		items.Rows[i] = Row{}
+		items.Rows[i].Description = make([]string, numberoffields)
+		items.Rows[i].Description[0] = list[i].ID
+		items.Rows[i].Description[1] = list[i].ClientName
+		items.Rows[i].Description[2] = list[i].Date
+		items.Rows[i].Description[3] = list[i].Status
+		items.Rows[i].Description[4] = list[i].EatMode
+
+		items.Orders[i] = list[i]
+
+		price, _ := strconv.ParseFloat(list[i].TotalGeral, 64)
+		tot = tot + price
+	}
+	items.Info.Total = strconv.FormatFloat(tot, 'f', 2, 64)
+
+	t.Execute(httpwriter, items)
+}
+
+// ListStatusActivityUser = assemble results of API call to dish list
+func ListStatusActivityUser(httprequest *http.Request, httpwriter http.ResponseWriter, redisclient *redis.Client, credentials models.Credentials, sysid string) {
+
+	status := httprequest.URL.Query().Get("status")
+	clientname := httprequest.URL.Query().Get("clientname")
+	// activity := httprequest.URL.Query().Get("activity")
+
+	activeactivity := activity.FindActiveAPI()
+	activity := activeactivity.Name
+
+	// create new template
+	t, _ := template.ParseFiles("templates/order/indexlistrefresh.html", "templates/order/orderlisttemplate.html")
+
+	// Get list of orders (api call)
+	//
+	var list = APICallListStatusActivityUser(sysid, redisclient, credentials, status, activity, clientname)
+
+	// Assemble the display structure for html template
+	//
+	items := DisplayTemplate{}
+	items.Info.Name = "Order List"
+	items.Info.UserID = credentials.UserID
+	items.Info.UserName = credentials.Name
+	items.Info.ApplicationID = credentials.ApplicationID
+	items.Info.IsAdmin = credentials.IsAdmin
+	items.Info.ClientName = clientname
 
 	var numberoffields = 5
 

@@ -1,16 +1,16 @@
 {{ define "listtemplate" }}
 
-<div id="header" class="navbar navbar-left" id="navbar">
-    <a href="/" class="btn btn-md btn-danger ">Home</a>
-    <a href="/dishlistpictures" class="btn btn-md btn-success ">Menu</a>
-    <a href="/orderlist" class="btn btn-md btn-success">Orders</a>
+<div id="header" id="navbar">
+    <a href="/" class="ui teal button">Home</a>
+    <a href="/dishlistpictures" class="ui teal button">Menu</a>
+    <a href="/orderlist" class="ui teal button">Orders</a>
 
     {{ if eq .Info.IsAdmin "Yes" }}
-        <a href="/dishlist" class="btn btn-md btn-success ">Dishes</a>
-        <a href="/activitylist" class="btn btn-md btn-success ">Activities</a>
+        <a href="/dishlist" class="ui teal button">Dishes</a>
+        <a href="/activitylist" class="ui teal button">Activities</a>
     {{ end }}
 
-    <a href="/instructions" class="btn btn-md btn-success">Instructions</a>
+    <a href="/instructions" class="ui teal button">Instructions</a>
 
 </div>
 
@@ -45,8 +45,8 @@
 <table></table>
 <div id="footer">
     <div id="header" class="navbar navbar-right" id="navbar">
-        <a href="/login" class="btn btn-md btn-warning ">Login</a> 
-        <a href="/logout" class="btn btn-md btn-warning ">Logout</a> 
+        <a href="/login" class=" btn-warning ">Login</a> 
+        <a href="/logout" class=" btn-warning ">Logout</a> 
     </div>
 </div>
 

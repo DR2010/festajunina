@@ -163,7 +163,10 @@ func APICallListV2(sysid string, redisclient *redis.Client, credentials models.C
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatal("Do: ", err)
+		// log.Fatal("Do: ", err)
+		// return emptydisplay
+
+		fmt.Println("End point not availabe: " + urlrequest + " - Error: " + err.Error())
 		return emptydisplay
 	}
 
@@ -309,6 +312,51 @@ func APICallListStatusActivity(sysid string, redisclient *redis.Client, credenti
 	//
 	escapeactivity := url.QueryEscape(activity)
 	urlrequest := apiserver + "/orderstatusactivity?status=" + status + "&activity=" + escapeactivity
+
+	url := fmt.Sprintf(urlrequest)
+
+	// Build the request
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		log.Fatal("NewRequest: ", err)
+		return emptydisplay
+	}
+
+	client := &http.Client{}
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Fatal("Do: ", err)
+		return emptydisplay
+	}
+
+	defer resp.Body.Close()
+
+	// return list of orders
+	var list []models.Order
+
+	if err := json.NewDecoder(resp.Body).Decode(&list); err != nil {
+		log.Println(err)
+	}
+
+	return list
+}
+
+// APICallListStatusActivityUser is completed
+func APICallListStatusActivityUser(sysid string, redisclient *redis.Client, credentials models.Credentials, status string, activity string, clientname string) []models.Order {
+
+	var apiserver string
+	var emptydisplay []models.Order
+
+	apiserver, _ = redisclient.Get(sysid + "MSAPIordersIPAddress").Result()
+
+	// urlrequest := apiserver + "/orderstatusactivity?status=" + status + "&activity=" + url.PathEscape(activity)
+
+	// If the value has spaces and it is used in URL, it needs to be escaped
+	//
+	escapeactivity := url.QueryEscape(activity)
+	escapeclientname := url.QueryEscape(clientname)
+	urlrequest := apiserver + "/orderstatusactivityname?status=" + status + "&activity=" + escapeactivity + "&clientname=" + escapeclientname
 
 	url := fmt.Sprintf(urlrequest)
 

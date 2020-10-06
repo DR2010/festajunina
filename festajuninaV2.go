@@ -28,6 +28,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+
 	// The Models are shared by WEB and API
 	disheshandler "festajuninav2/areas/disheshandler"
 	helper "festajuninav2/areas/helper"
@@ -74,6 +75,14 @@ func main() {
 		Password: "", // no password set
 		DB:       0,  // use default DB
 	})
+
+	// Azure Redis Instance
+	// redisclient = redis.NewClient(&redis.Options{
+	// 	Addr:     "machadodaniel.redis.cache.windows.net:6379",
+	// 	Password: "Uqtb3wgcdUA4IJEuyRUrtw5gnH0C1oWuOs3h4JTkJ1o=",
+	// 	DB:       0, // use default
+	// 	// TLSConfig: &tls.Config{}, // your config here
+	// })
 
 	// -------------------------------------------------
 	sysid = helper.GetSYSID()
@@ -125,6 +134,12 @@ func main() {
 func loadreferencedatainredis() {
 	variable := helper.Readfileintostruct()
 	err = redisclient.Set(sysid+"APIMongoDBLocation", variable.APIMongoDBLocation, 0).Err()
+
+	if err != nil {
+		//using the mux router
+		log.Fatal("loadreferencedatainredis: ", err)
+	}
+
 	err = redisclient.Set(sysid+"APIMongoDBDatabase", variable.APIMongoDBDatabase, 0).Err()
 	err = redisclient.Set(sysid+"Web.APIServer.Port", variable.APIAPIServerPort, 0).Err()
 	err = redisclient.Set(sysid+"WEBServerPort", variable.WEBServerPort, 0).Err()
@@ -147,6 +162,7 @@ func loadreferencedatainredis() {
 	err = redisclient.Set(sysid+"MSAPImainPort", variable.MSAPImainPort, 0).Err()
 	err = redisclient.Set(sysid+"MSAPIdishesPort", variable.MSAPIdishesPort, 0).Err()
 	err = redisclient.Set(sysid+"MSAPIordersPort", variable.MSAPIordersPort, 0).Err()
+	err = redisclient.Set(sysid+"PingSiteURL", variable.PingSiteURL, 0).Err()
 }
 
 func root(httpwriter http.ResponseWriter, req *http.Request) {
@@ -245,6 +261,9 @@ func saveordertosql(httpwriter http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	return
+
+	// It is not working - 14 May 2019 -
 	ordershandler.SaveOrderToMySQL(httpwriter, redisclient, credentials, req, sysid)
 
 }
@@ -374,6 +393,23 @@ func orderliststatusactivity(httpwriter http.ResponseWriter, req *http.Request) 
 	//
 	if credentials.IsAdmin == "Yes" {
 		ordershandler.ListStatusActivity(req, httpwriter, redisclient, credentials, sysid)
+	}
+
+}
+
+func orderliststatusactivityuser(httpwriter http.ResponseWriter, req *http.Request) {
+
+	error, credentials := security.ValidateTokenV2(redisclient, req)
+
+	if error == "NotOkToLogin" {
+		http.Redirect(httpwriter, req, "/login", 303)
+		return
+	}
+
+	// Only Admin
+	//
+	if credentials.IsAdmin == "Yes" {
+		ordershandler.ListStatusActivityUser(req, httpwriter, redisclient, credentials, sysid)
 	}
 
 }
@@ -646,6 +682,14 @@ func activitylist(httpwriter http.ResponseWriter, req *http.Request) {
 	}
 
 	activitieshandler.List(httpwriter, redisclient, credentials, sysid)
+}
+
+// ----------------------------------------------------------
+// Ping job search every minute
+// ----------------------------------------------------------
+func pingsite(httpwriter http.ResponseWriter, req *http.Request) {
+
+	activitieshandler.PingSite(httpwriter, redisclient, sysid)
 }
 
 func activityadddisplay(httpwriter http.ResponseWriter, req *http.Request) {

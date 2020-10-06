@@ -82,6 +82,7 @@ func Getvaluefromcache(key string) string {
 	sysid := GetSYSID()
 
 	valuetoreturn, _ := rp.Get(sysid + key).Result()
+	fmt.Println("Getvaluefromcache key: " + key + "  valuetoreturn:" + valuetoreturn)
 
 	return valuetoreturn
 }

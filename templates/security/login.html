@@ -6,8 +6,9 @@
 
     <meta id="meta" name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="css/taskman.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="css/taskman.css" /> -->
     <link rel="stylesheet" type="text/css" href="css/festajunina.css" />
+    <link rel="stylesheet" type="text/css" href="css/semantic.min.css" />
 
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700" rel="stylesheet" type="text/css">
     <link rel="icon" href="images/festa-junina.jpg">
@@ -16,7 +17,7 @@
 <body ng-controller="tasksController" background="festa-junina.jpg">
     
     <div id="header" class="navbar navbar-left" id="navbar">
-        <a href="/" class="btn btn-md btn-success">Home</a>
+        <a href="/" class="ui green button">Home</a>
     </div>
     <h2>Festa Junina - Login Page</h2>
 
@@ -28,15 +29,15 @@
         <p/>
         <input type="password" name="password" placeholder="password">
         <p/>
-        <input type="submit" value="Login" class="btn btn-md btn-success">
+        <input type="submit" value="Login" class="ui green button">
         <p/>
     </form>
 
    
     <p>NEW USERS: Register please.</p>
-    <a href="/signup" class="btn btn-md btn-success">New User</a>
-    <a href="/forgotpassword" class="btn btn-md btn-success">Forgot Password</a>
-    <a href="/instructions" class="btn btn-md btn-success">Instructions</a>
+    <a href="/signup" class="ui green button">New User</a>
+    <a href="/forgotpassword" class="ui green button">Forgot Password</a>
+    <a href="/instructions" class="ui green button">Instructions</a>
 
     {{ template "messagetemplate" . }}
 

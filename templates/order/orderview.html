@@ -1,8 +1,8 @@
 {{define "listtemplate"}}
 
-<div id="header" class="navbar navbar-left" id="navbar">
-    <a href="/" class="btn btn-md btn-danger">Home</a>
-    <a href="/orderlist" class="btn btn-md btn-success ">Back</a>
+<div id="header" id="navbar">
+    <a href="/" class="ui red button">Home</a>
+    <a href="/orderlist" class="ui teal button">Back</a>
 </div>
 <p/>
 
@@ -13,21 +13,21 @@ Event:<br>
 
 <br>
 <br>Order Number:<br>
-<input type="text" id="orderID" name="orderID" value="{{ .OrderItem.ID }} " size="5" readonly class="btn btn-md btn-primary">
+<input type="text" id="orderID" name="orderID" value="{{ .OrderItem.ID }} " size="5" readonly class="ui blue button">
 
 {{if eq .OrderItem.Status "Placed" }}
-    <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="btn btn-md btn-danger">
+    <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="ui red button">
 {{ else }}
     {{if eq .OrderItem.Status "Ready" }}
-    <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="btn btn-md btn-success">
+    <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="ui green button">
     {{ else }}
         {{if eq .OrderItem.Status "Completed" }}
-        <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="btn btn-md btn-primary">
+        <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="ui grey button">
         {{ else }}
             {{if eq .OrderItem.Status "Cancelled" }}
-            <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="btn btn-md btn-danger">
+            <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="ui brown button">
             {{ else }}
-            <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="btn btn-md btn-warning">
+            <input type="text" id="status" name="status" value="{{ .OrderItem.Status }}" size="5" readonly class="ui yellow button">
             {{ end }}
         {{ end }}
     {{ end }}
@@ -75,17 +75,17 @@ Event:<br>
 
 <div>
 
-    <a href="/orderlist" class="btn btn-md btn-success">Back</a>
+    <a href="/orderlist" class="ui teal button">Back</a>
     <p/>
 
     {{ if eq .Info.IsAdmin "Yes" }}
         <br>>> UPDATE ORDER STATUS:<br>
-        <!-- <a href="/ordersettoserving?orderid={{ .OrderItem.ID }}" class="btn btn-md btn-primary">Serving</a> -->
-        <a href="/ordersettoready?orderid={{ .OrderItem.ID }}" class="btn btn-md btn-success">Ready</a>
-        <a href="/ordersettocompleted?orderid={{ .OrderItem.ID }}" class="btn btn-md btn-primary">Completed</a>
-        <a href="/ordersettopaylater?orderid={{ .OrderItem.ID }}" class="btn btn-md btn-warning">Pay Later</a>
-        <a href="/ordercancelX?orderid={{ .OrderItem.ID }}" class="btn btn-md btn-danger">Cancel Order</a>
-        <a href="/ordersettoplaced?orderid={{ .OrderItem.ID }}" class="btn btn-md btn-danger">Placed</a>
+        
+        <a href="/ordersettoready?orderid={{ .OrderItem.ID }}" class="ui green button">Ready</a>
+        <a href="/ordersettocompleted?orderid={{ .OrderItem.ID }}" class="ui grey button">Completed</a>
+        <a href="/ordersettopaylater?orderid={{ .OrderItem.ID }}" class="ui yellow button">Pay Later</a>
+        <a href="/ordercancelX?orderid={{ .OrderItem.ID }}" class="ui brown button">Cancel Order</a>
+        <a href="/ordersettoplaced?orderid={{ .OrderItem.ID }}" class="ui red button">Placed</a>
     {{ end }}
     <!-- {{if eq .OrderItem.Status "Placed" }}
     {{ end }} -->
@@ -108,8 +108,8 @@ Event:<br>
     <p/>
 
 
-    <button class="btn btn-md btn-success" onclick="calcularTroco()">Calcular Troco</button>
-    <button class="btn btn-md btn-success" onclick="printOrder()">Print</button>
+    <button class="ui green button" onclick="calcularTroco()">Calculate Change</button>
+    <button class="ui green button" onclick="printOrder()">Print</button>
 
 
 
