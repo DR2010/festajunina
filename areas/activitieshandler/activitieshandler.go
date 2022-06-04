@@ -10,7 +10,8 @@ import (
 	models "festajuninav2/models"
 	"fmt"
 	"html/template"
-	"mongodb/dishes"
+	// "festajuninav2/models"
+
 	"net/http"
 	"net/url"
 	"strings"
@@ -42,7 +43,7 @@ type DisplayTemplate struct {
 	Info       ControllerInfo
 	FieldNames []string
 	Rows       []Row
-	Pratos     []dishes.Dish
+	Pratos     []models.Dish
 	Activities []models.Activity
 }
 

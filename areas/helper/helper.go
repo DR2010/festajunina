@@ -7,12 +7,23 @@ import (
 	"io/ioutil"
 
 	"github.com/go-redis/redis"
+
+	// "festajuninav2/areas/security"
 )
 
 var redisclient *redis.Client
 var SYSID string
 var databaseEV commonstruct.DatabaseX
 var envirvar commonstruct.RestEnvVariables
+
+// Resultado is a struct
+type Resultado struct {
+	ErrorCode        string // error code
+	ErrorDescription string // description
+	IsSuccessful     string // Y or N
+	ReturnedValue    string
+}
+
 
 // Readfileintostruct is
 func Readfileintostruct() commonstruct.RestEnvVariables {
@@ -26,6 +37,47 @@ func Readfileintostruct() commonstruct.RestEnvVariables {
 
 	return restenv
 }
+
+// RestEnvVariables = restaurante environment variables
+//
+type RestEnvVariables struct {
+	APIMongoDBLocation    string // location of the database localhost, something.com, etc
+	APIMongoDBDatabase    string // database name
+	APIAPIServerPort      string // collection name
+	APIAPIServerIPAddress string // apiserver name
+	WEBDebug              string // debug
+	RecordCurrencyTick    string // debug
+	RunningFromServer     string // debug
+	WEBServerPort         string // collection name
+	ConfigFileFound       string // collection name
+	ApplicationID         string // collection name
+	UserID                string // collection name
+	AppFestaJuninaEnabled string
+	AppBelnorthEnabled    string
+	AppBitcoinEnabled     string
+}
+
+// Claim is
+type Claim struct {
+	Type  string
+	Value string
+}
+
+// Credentials is a struct
+// ----------------------------------------------------
+type Credentials struct {
+	UserID        string // error code
+	UserName      string // description
+	KeyJWT        string
+	JWT           string
+	Expiry        string
+	Roles         []string         // Y or N
+	ClaimSet      []Claim // Y or N
+	ApplicationID string           //
+	IsAdmin       string           //
+	CentroID      string           //
+}
+
 
 // GetSYSID is just returning the System ID directly from file
 // It is happening to enable multiple usage of Redis Keys ("SYSID" + "APIURL" for instance)

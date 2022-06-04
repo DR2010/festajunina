@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"mongodb/dishes"
+	// "mongodb/dishes"
 	"net/http"
 	"strconv"
 	"strings"
@@ -753,7 +753,7 @@ type DisplayTemplate struct {
 	Info       ControllerInfo
 	FieldNames []string
 	Rows       []Row
-	Pratos     []dishes.Dish
+	Pratos     []models.Dish
 }
 
 // Instructions is for login

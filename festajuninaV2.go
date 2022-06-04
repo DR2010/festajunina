@@ -4,7 +4,7 @@
 
 02-Sep-2018
 Agora utilisamos varios microservices
-- FestaJuninaWeb - website running on port :1710
+- FestaJuninaWeb - website running on port :80
 - Main   - API :1605
 - Dishes - API :1610
 - Orders - API :1620
@@ -17,6 +17,8 @@ package main
 import (
 	"database/sql"
 	"festajuninav2/areas/activitieshandler"
+	admshandler "festajuninav2/areas/admshandler"
+	"festajuninav2/areas/coinspothandler"
 
 	_ "github.com/go-sql-driver/mysql"
 
@@ -122,7 +124,7 @@ func main() {
 	http.Handle("/fonts/", http.StripPrefix("/fonts", http.FileServer(http.Dir("./fonts"))))
 	http.Handle("/images/", http.StripPrefix("/images", http.FileServer(http.Dir("./images"))))
 
-	err := http.ListenAndServe(":1710", nil) // setting listening port
+	err := http.ListenAndServe(":80", nil) // setting listening port
 	// err := http.ListenAndServe(envirvar.WEBServerPort, nil) // setting listening port
 	if err != nil {
 		//using the mux router
@@ -243,6 +245,18 @@ func loginPageV4(httpresponsewriter http.ResponseWriter, httprequest *http.Reque
 	security.LoginPage(httpresponsewriter, httprequest, redisclient, sysid)
 }
 
+func admsindex(httpresponsewriter http.ResponseWriter, httprequest *http.Request) {
+
+	error, credentials := security.ValidateTokenV2(redisclient, httprequest)
+
+	if error == "NotOkToLogin" {
+		http.Redirect(httpresponsewriter, httprequest, "/trainingcontractindex", http.StatusSeeOther) // 303
+		return
+	}
+
+	admshandler.AdmsIndex(httpresponsewriter, redisclient, credentials, sysid)
+}
+
 func instructions(httpresponsewriter http.ResponseWriter, httprequest *http.Request) {
 
 	security.Instructions(httpresponsewriter, httprequest, redisclient)
@@ -257,7 +271,7 @@ func saveordertosql(httpwriter http.ResponseWriter, req *http.Request) {
 	error, credentials := security.ValidateTokenV2(redisclient, req)
 
 	if error == "NotOkToLogin" {
-		http.Redirect(httpwriter, req, "/login", 303)
+		http.Redirect(httpwriter, req, "/login", http.StatusSeeOther)
 		return
 	}
 
@@ -684,12 +698,42 @@ func activitylist(httpwriter http.ResponseWriter, req *http.Request) {
 	activitieshandler.List(httpwriter, redisclient, credentials, sysid)
 }
 
+func trainingcontractget(httpwriter http.ResponseWriter, req *http.Request) {
+
+	error, credentials := security.ValidateTokenV2(redisclient, req)
+
+	if error == "NotOkToLogin" {
+		http.Redirect(httpwriter, req, "/login", 303)
+		return
+	}
+
+	// If user is not ADMIN, show only users order
+
+	admshandler.TrainingContractGet(httpwriter, redisclient, credentials)
+
+}
+
 // ----------------------------------------------------------
 // Ping job search every minute
 // ----------------------------------------------------------
-func pingsite(httpwriter http.ResponseWriter, req *http.Request) {
+// func pingsite(httpwriter http.ResponseWriter, req *http.Request) {
 
-	activitieshandler.PingSite(httpwriter, redisclient, sysid)
+// 	activitieshandler.PingSite(httpwriter, redisclient, sysid)
+// }
+
+func coinspotlist(httpwriter http.ResponseWriter, req *http.Request) {
+
+	error, credentials := security.ValidateTokenV2(redisclient, req)
+
+	if error == "NotOkToLogin" {
+		http.Redirect(httpwriter, req, "/login", 303)
+		return
+	}
+
+	// If user is not ADMIN, show only users order
+
+	coinspothandler.ListV2(httpwriter, redisclient, credentials)
+
 }
 
 func activityadddisplay(httpwriter http.ResponseWriter, req *http.Request) {

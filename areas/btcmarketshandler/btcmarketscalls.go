@@ -10,7 +10,10 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"restauranteapi/helper"
+
+	// "restauranteapi/helper"
+	helper "festajuninav2/areas/helper"
+
 	"strings"
 
 	"github.com/go-redis/redis"

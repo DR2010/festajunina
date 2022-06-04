@@ -61,6 +61,9 @@ var routes = Routes{
 	Route{"Index", "GET", "/", root},
 	// ----------------------------------------------------------- Error
 	// Route{"errorpage", "GET", "/login", errorpage},
+	// ----------------------------------------------------------- ADMS
+	Route{"adms", "POST", "/adms", admsindex},
+	Route{"adms", "GET", "/adms", admsindex},
 	// ----------------------------------------------------------- Security
 	Route{"login", "GET", "/login", loginPageV4},
 	Route{"instructions", "GET", "/instructions", instructions},
@@ -102,7 +105,7 @@ var routes = Routes{
 	// ----------------------------------------------------------- Order
 
 	Route{"activitylist", "GET", "/activitylist", activitylist},
-	Route{"pingsite", "GET", "/pingsite", pingsite},
+	// Route{"pingsite", "GET", "/pingsite", pingsite},
 
 	Route{"activityadddisplay", "POST", "/activityadddisplay", activityadddisplay},
 	Route{"activityupdatedisplay", "POST", "/activityupdatedisplay", activityupdatedisplay},
@@ -136,5 +139,7 @@ var routes = Routes{
 	Route{"ordercancelX", "POST", "/ordercancelX", ordercancel},
 	Route{"orderviewdisplay", "GET", "/orderviewdisplay", orderviewdisplay},
 	// -----------------------------------------------------------
-
+	Route{"coinspotlist", "GET", "/coinspotlist", coinspotlist},
+	// -----------------------------------------------------------
+	Route{"trainingcontractget", "GET", "/trainingcontractget", trainingcontractget},
 }

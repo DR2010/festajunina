@@ -2,12 +2,12 @@ package securityhandler
 
 import (
 	"encoding/json"
-	"festajuninav2/models"
+	// "festajuninav2/models"
+	models "festajuninav2/models"
 	"fmt"
 
 	"io/ioutil"
 	"log"
-	"mongodb/dishes"
 	"net/http"
 	"strconv"
 	"strings"
@@ -795,7 +795,7 @@ type DisplayTemplate struct {
 	Info       ControllerInfo
 	FieldNames []string
 	Rows       []Row
-	Pratos     []dishes.Dish
+	Pratos     []models.Dish
 }
 
 // Instructions is for login

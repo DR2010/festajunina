@@ -11,3 +11,5 @@ mongoexport --db restaurante --collection security --out sec.json
 mongoimport --db TheHouseOfThePath --collection security --file sec.json
 
 mongoimport --db festajunina --collection security --file sec.json
+mongoimport --db festajunina --collection security --file security.json
+mongoimport --db festajunina --collection orders --file orders.json
