@@ -5,11 +5,11 @@
 package coinspothandler
 
 import (
-	"festajuninav2/areas/commonstruct"
-	"festajuninav2/models"
 	"html/template"
 	"net/http"
-	helper "festajuninav2/areas/helper"
+	"webgoyounit/areas/commonstruct"
+	helper "webgoyounit/areas/helper"
+	"webgoyounit/models"
 
 	"github.com/go-redis/redis"
 )

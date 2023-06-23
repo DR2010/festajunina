@@ -6,13 +6,13 @@ package ordershandler
 
 import (
 	"encoding/json"
-	"festajuninav2/areas/commonstruct"
-	"festajuninav2/models"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
 	"strings"
+	"webgoyounit/areas/commonstruct"
+	"webgoyounit/models"
 
 	"github.com/go-redis/redis"
 

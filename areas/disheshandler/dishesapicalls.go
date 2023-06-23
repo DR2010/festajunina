@@ -6,15 +6,15 @@ package disheshandler
 
 import (
 	"encoding/json"
-	"festajuninav2/areas/commonstruct"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
 	"strings"
+	"webgoyounit/areas/commonstruct"
 
-	helper "festajuninav2/areas/helper"
-	dishes "festajuninav2/models"
+	helper "webgoyounit/areas/helper"
+	dishes "webgoyounit/models"
 )
 
 // // Dish is to be exported

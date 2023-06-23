@@ -2,18 +2,18 @@ package helper
 
 import (
 	"encoding/json"
-	"festajuninav2/areas/commonstruct"
 	"fmt"
 	"io/ioutil"
+	"webgoyounit/areas/commonstruct"
 
 	"github.com/go-redis/redis"
-
 	// "festajuninav2/areas/security"
 )
 
 var redisclient *redis.Client
 var SYSID string
-var databaseEV commonstruct.DatabaseX
+
+// var databaseEV commonstruct.DatabaseX
 var envirvar commonstruct.RestEnvVariables
 
 // Resultado is a struct
@@ -24,10 +24,9 @@ type Resultado struct {
 	ReturnedValue    string
 }
 
-
 // Readfileintostruct is
 func Readfileintostruct() commonstruct.RestEnvVariables {
-	dat, err := ioutil.ReadFile("festajuninav2.ini")
+	dat, err := ioutil.ReadFile("webgoyounit.ini")
 	check(err)
 	fmt.Print(string(dat))
 
@@ -71,13 +70,12 @@ type Credentials struct {
 	KeyJWT        string
 	JWT           string
 	Expiry        string
-	Roles         []string         // Y or N
-	ClaimSet      []Claim // Y or N
-	ApplicationID string           //
-	IsAdmin       string           //
-	CentroID      string           //
+	Roles         []string // Y or N
+	ClaimSet      []Claim  // Y or N
+	ApplicationID string   //
+	IsAdmin       string   //
+	CentroID      string   //
 }
-
 
 // GetSYSID is just returning the System ID directly from file
 // It is happening to enable multiple usage of Redis Keys ("SYSID" + "APIURL" for instance)
@@ -85,7 +83,7 @@ func GetSYSID() string {
 
 	if SYSID == "" {
 
-		dat, err := ioutil.ReadFile("festajuninav2.ini")
+		dat, err := ioutil.ReadFile("webgoyounit.ini")
 		check(err)
 		fmt.Print(string(dat))
 

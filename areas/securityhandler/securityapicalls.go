@@ -8,9 +8,6 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
-	"festajuninav2/areas/commonstruct"
-	"festajuninav2/areas/helper"
-	"festajuninav2/models"
 	"fmt"
 	"io"
 	"log"
@@ -18,6 +15,9 @@ import (
 	"net/url"
 	"strings"
 	"time"
+	"webgoyounit/areas/commonstruct"
+	"webgoyounit/areas/helper"
+	"webgoyounit/models"
 
 	"github.com/go-redis/redis"
 )

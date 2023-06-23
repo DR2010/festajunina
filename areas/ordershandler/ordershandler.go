@@ -6,18 +6,18 @@ package ordershandler
 
 import (
 	"encoding/json"
-	"festajuninav2/areas/commonstruct"
 	"fmt"
 	"html/template"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"time"
+	"webgoyounit/areas/commonstruct"
 
-	activity "festajuninav2/areas/activitieshandler"
-	dish "festajuninav2/areas/disheshandler"
-	securityhandler "festajuninav2/areas/securityhandler"
-	models "festajuninav2/models"
+	activity "webgoyounit/areas/activitieshandler"
+	dish "webgoyounit/areas/disheshandler"
+	securityhandler "webgoyounit/areas/securityhandler"
+	models "webgoyounit/models"
 
 	"github.com/go-redis/redis"
 )

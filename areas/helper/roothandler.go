@@ -5,11 +5,11 @@
 package helper
 
 import (
-	"festajuninav2/areas/commonstruct"
-	"festajuninav2/models"
 	"fmt"
 	"html/template"
 	"net/http"
+	"webgoyounit/areas/commonstruct"
+	"webgoyounit/models"
 
 	"github.com/go-redis/redis"
 )

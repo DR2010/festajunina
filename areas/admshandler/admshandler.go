@@ -5,10 +5,10 @@
 package admshandler
 
 import (
-	"festajuninav2/models"
 	"html/template"
 	"net/http"
 	"strconv"
+	"webgoyounit/models"
 
 	"github.com/go-redis/redis"
 )

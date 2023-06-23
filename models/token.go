@@ -1,6 +1,6 @@
 // Package models is a dish for packages
 // -------------------------------------
-// .../restauranteapi/models/dishes.go
+// .../webgoyounit/models/dishes.go
 // -------------------------------------
 package models
 

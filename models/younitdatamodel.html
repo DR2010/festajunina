@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<body>
+  <div class="mermaid">
+    erDiagram
+      COMPLEX   ||--o{ UNIT          : has
+      UNIT   ||--o{ UNITRESIDENT          : has
+      RESIDENT   ||--o{ UNITRESIDENT          : has
+      UNIT   ||--o{ LANDLORDOWNUNIT          : has
+      LANDLORD   ||--o{ LANDLORDOWNUNIT          : has
+      PROPERTYMANAGER   ||--o{ PROPERTYMANAGERUNIT         : has
+      UNIT   ||--o{ PROPERTYMANAGERUNIT          : has
+      LANDLORD   ||--o{ PROPERTYMANAGERUNIT          : has
+      COMPLEX   ||--o{ EXECUTIVECOMMITTEE          : has
+      LANDLORD   ||--o{ EXECUTIVECOMMITTEE          : has
+      STRATAMANAGER   ||--o{ ASSIGNEDMANAGER          : has
+      COMPLEX   ||--o{ ASSIGNEDMANAGER          : has
+      CommunityTitleScheme   ||--o{ COMPLEX          : has
+      STRATAMANAGER   ||--o{ StrataManagesCTS          : has
+      CommunityTitleScheme   ||--o{ StrataManagesCTS          : has
+      COMPLEX   ||--o{ AllowedContractors          : has
+      CONTRACTOR  ||--o{ AllowedContractors          : has
+      CONTRACTOR ||--o{ BlacklistedContractors      : has
+      PROPERTYMANAGER  ||--o{ WorkOrder          : raise
+      CONTRACTOR  ||--o{ WorkOrder          : workson
+      UNIT  ||--o{ WorkOrder          : worktobeperformed
+      RESIDENT  ||--o{ LogUnitIssue           : Called
+      PROPERTYMANAGER  ||--o{ LogUnitIssue           : Called
+      LogUnitIssue ||--o{ WorkOrder          : Called
+
+  </div>
+  <script src="mermaid.min.js"></script>
+  <script>mermaid.initialize({startOnLoad:true});</script>
+</body>
+</html>

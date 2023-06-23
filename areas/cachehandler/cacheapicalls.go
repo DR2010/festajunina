@@ -6,10 +6,10 @@ package cachehandler
 
 import (
 	"encoding/json"
-	"festajuninav2/areas/commonstruct"
 	"fmt"
 	"log"
 	"net/http"
+	"webgoyounit/areas/commonstruct"
 
 	"github.com/go-redis/redis"
 )

@@ -6,15 +6,15 @@ package activitieshandler
 
 import (
 	"encoding/json"
-	"festajuninav2/areas/commonstruct"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
 	"strings"
+	"webgoyounit/areas/commonstruct"
 
-	helper "festajuninav2/areas/helper"
-	activities "festajuninav2/models"
+	helper "webgoyounit/areas/helper"
+	activities "webgoyounit/models"
 )
 
 // List works

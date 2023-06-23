@@ -6,10 +6,11 @@ package admshandler
 
 import (
 	"encoding/json"
-	models "festajuninav2/models"
 	"fmt"
 	"log"
 	"net/http"
+	"net/url"
+	models "webgoyounit/models"
 
 	"github.com/go-redis/redis"
 )
@@ -111,7 +112,9 @@ func TrainingContractList(httpwriter http.ResponseWriter, redisclient *redis.Cli
 		return emptydisplay
 	}
 
-	token := GetToken()
+	token := getAuthJWTToken()
+
+	token = GetToken()
 
 	req.Header.Set("Ocp-Apim-Subscription-Key", "f2c6767fdc4845e7ab9302d7826a9ad5")
 	req.Header.Set("Authorization", "Bearer "+token)
@@ -210,5 +213,28 @@ func GetToken() string {
 	}
 
 	return token.AccessToken
+
+}
+
+func getAuthJWTToken() string {
+
+	// See func authHandler for an example auth handler that produces a token
+	res, err := http.PostForm(fmt.Sprintf("http://localhost:%v/authenticate", "80"), url.Values{
+		"resource":              {"urn%3askl%3approd%3aapi%3aadms%3astaging"},
+		"client_id":             {"e9ad682a-82d0-4ca3-9368-3ce5bbaac264"},
+		"client_assertion_type": {"urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer"},
+		"client_assertion":      {"eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk4MzUwRDY1NzlBNjNCOUUzMDg1QURBODQwMjZGQTYxNzlEMjgwODciLCJ4NXQiOiJtRFVOWlhtbU81NHdoYTJvUUNiNllYblNnSWMiLCJ0eXAiOiJKV1QiLCJjdHkiOiJKV1QifQ.eyJzdWIiOiJlOWFkNjgyYS04MmQwLTRjYTMtOTM2OC0zY2U1YmJhYWMyNjQiLCJqdGkiOiJjNzc2NjA3Ni01ZWIwLTQwMTQtYTk0NS0yMTM0Zjg1NjAyNmYiLCJuYmYiOjE2Njk1Mjk4NTMsImV4cCI6MTY2OTUzMDQ1MywiaXNzIjoiZTlhZDY4MmEtODJkMC00Y2EzLTkzNjgtM2NlNWJiYWFjMjY0IiwiYXVkIjoiaHR0cHM6Ly9zdHMueGF1dGhucC5kaXMuZ292LmF1L2FkZnMvb2F1dGgyL3Rva2VuIn0.uiTIb2jwPT7p6cFuxHG7yb7xE5SLJvhphSbK9yUi5vJmyHGshm4U_bPwbuiTT8Kiq-NVKuZdhu70emRNmg7kzwQ9rEqKCUDGeMJxZavMpIDqgebR58m3qJz8F2e87WyifoWgWGzwIt50U9P0TMH_ctJfiQ3MrhyQ2CVhRgBXVngxQfcLSWA4e-bJrHyYlDmrGhnW1OOHmjXt7MfY2effhRVTzlbJjjDWiSgF4neUFCKgp6he7X82G_XSWQnr12McI5XZkXNywgo3fJic0_LjOKoY01Baxj3VfaGiWTsfgQqIFnVWap5p5mpEjx26MSuhucjs5p328C7UUt6dT7ewOw"},
+		"grant_type":            {"client_credentials"},
+	})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if res.StatusCode != 200 {
+		fmt.Println("Unexpected status code", res.StatusCode)
+	}
+
+	return ("all good")
 
 }

@@ -11,7 +11,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	helper "festajuninav2/areas/helper"
+	helper "webgoyounit/areas/helper"
 
 	"github.com/go-redis/redis"
 )

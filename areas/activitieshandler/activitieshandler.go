@@ -5,12 +5,11 @@
 package activitieshandler
 
 import (
-	"festajuninav2/areas/commonstruct"
-	helper "festajuninav2/areas/helper"
-	models "festajuninav2/models"
 	"fmt"
 	"html/template"
-	// "festajuninav2/models"
+	"webgoyounit/areas/commonstruct"
+	helper "webgoyounit/areas/helper"
+	models "webgoyounit/models"
 
 	"net/http"
 	"net/url"
